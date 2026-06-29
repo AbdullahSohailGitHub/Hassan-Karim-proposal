@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hassan Karim — Amazon Clone Proposal</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --deep:    #07071A;
+  --surface: #0D0D24;
+  --card:    #12122E;
+  --amber:   #FFB703;
+  --orange:  #FB8500;
+  --violet:  #7B61FF;
+  --teal:    #38BDF8;
+  --text:    #EEEEFF;
+  --muted:   #8080AA;
+  --border:  rgba(255,255,255,0.05);
+  --glow-a:  rgba(255,183,3,0.18);
+  --glow-v:  rgba(123,97,255,0.18);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--deep);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  line-height: 1.65;
+}
+
+/* ─── BG GRID ─── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(rgba(123,97,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(123,97,255,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+
+/* ─── ORB GLOWS ─── */
+.orb {
+  position: fixed; border-radius: 50%;
+  filter: blur(110px); opacity: 0.18; pointer-events: none; z-index: 0;
+}
+.orb-1 { width: 700px; height: 700px; background: radial-gradient(circle, #FFB703, transparent 65%); top: -280px; right: -180px; }
+.orb-2 { width: 550px; height: 550px; background: radial-gradient(circle, #7B61FF, transparent 65%); bottom: -200px; left: -180px; }
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 48px;
+  background: rgba(7,7,26,0.82);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; }
+.nav-logo em { color: var(--amber); font-style: normal; }
+.nav-badge {
+  font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.09em; color: var(--muted);
+  border: 1px solid var(--border); border-radius: 100px; padding: 4px 14px;
+}
+.nav-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 22px; background: linear-gradient(135deg, var(--amber), var(--orange));
+  color: #06061A; border-radius: 100px; font-size: 0.82rem; font-weight: 700;
+  text-decoration: none; font-family: 'Space Grotesk', sans-serif;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,183,3,0.45); }
+
+/* ─── HERO ─── */
+.hero {
+  position: relative; z-index: 1;
+  min-height: 100vh; display: flex; align-items: center;
+  max-width: 1240px; margin: 0 auto;
+  padding: 130px 48px 80px;
+  gap: 70px;
+}
+
+.hero-content { flex: 1; }
+
+.hero-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px;
+  background: rgba(255,183,3,0.08);
+  border: 1px solid rgba(255,183,3,0.22);
+  border-radius: 100px; margin-bottom: 28px;
+  font-size: 0.75rem; font-weight: 600; color: var(--amber);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.pill-dot {
+  width: 6px; height: 6px; background: var(--amber);
+  border-radius: 50%; animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+h1.hero-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2.6rem, 5.2vw, 4.2rem);
+  font-weight: 700; letter-spacing: -0.04em;
+  line-height: 1.06; margin-bottom: 22px;
+}
+h1.hero-title .g {
+  background: linear-gradient(135deg, #FFB703 0%, #FB8500 60%, #FF4D6A 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-desc {
+  font-size: 1.05rem; color: var(--muted); max-width: 490px;
+  margin-bottom: 36px; line-height: 1.75;
+}
+
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 14px 30px;
+  background: linear-gradient(135deg, var(--amber), var(--orange));
+  color: #06061A; border-radius: 14px;
+  font-size: 0.95rem; font-weight: 700;
+  text-decoration: none; font-family: 'Space Grotesk', sans-serif;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 44px rgba(255,183,3,0.42); }
+
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 14px 30px;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--muted); border-radius: 14px;
+  font-size: 0.95rem; text-decoration: none;
+  transition: border-color 0.25s, color 0.25s, transform 0.25s;
+}
+.btn-outline:hover { border-color: rgba(255,183,3,0.3); color: var(--text); transform: translateY(-2px); }
+
+/* ─── 3D CUBE ─── */
+.hero-visual {
+  flex: 0 0 320px; display: flex;
+  align-items: center; justify-content: center;
+  position: relative;
+}
+
+.cube-aura {
+  position: absolute; width: 380px; height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,183,3,0.12) 0%, rgba(251,133,0,0.06) 40%, transparent 70%);
+  animation: aura 4s ease-in-out infinite alternate;
+}
+@keyframes aura { from{transform:scale(0.9);opacity:0.6;} to{transform:scale(1.1);opacity:1;} }
+
+.scene { width: 200px; height: 200px; perspective: 700px; position: relative; z-index: 1; }
+
+.cube {
+  width: 200px; height: 200px;
+  position: relative; transform-style: preserve-3d;
+  animation: spin 18s linear infinite;
+}
+@keyframes spin { 0%{transform:rotateX(-22deg) rotateY(0deg);} 100%{transform:rotateX(-22deg) rotateY(360deg);} }
+
+.face {
+  position: absolute; width: 200px; height: 200px;
+  border: 1.5px solid rgba(255,183,3,0.28);
+  background: rgba(255,183,3,0.022);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.4rem;
+  backdrop-filter: blur(2px);
+}
+/* Blueprint grid inside faces */
+.face::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,183,3,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,183,3,0.06) 1px, transparent 1px);
+  background-size: 25px 25px;
+}
+
+.face.front  { transform: translateZ(100px); }
+.face.back   { transform: rotateY(180deg) translateZ(100px); }
+.face.right  { transform: rotateY(90deg)  translateZ(100px); }
+.face.left   { transform: rotateY(-90deg) translateZ(100px); }
+.face.top    { transform: rotateX(90deg)  translateZ(100px); }
+.face.bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+/* Orbit ring */
+.orbit-ring {
+  position: absolute; width: 280px; height: 280px;
+  border: 1px solid rgba(123,97,255,0.2); border-radius: 50%;
+  animation: orbitSpin 12s linear infinite;
+  top: 50%; left: 50%; transform: translate(-50%,-50%) rotateX(70deg);
+}
+@keyframes orbitSpin { from{transform:translate(-50%,-50%) rotateX(70deg) rotateZ(0deg);} to{transform:translate(-50%,-50%) rotateX(70deg) rotateZ(360deg);} }
+
+.orbit-dot {
+  position: absolute; width: 8px; height: 8px;
+  background: var(--violet); border-radius: 50%;
+  top: -4px; left: calc(50% - 4px);
+  box-shadow: 0 0 12px var(--violet);
+}
+
+/* ─── WRAPPER ─── */
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 48px; position: relative; z-index: 1; }
+
+/* ─── DIVIDER ─── */
+.div-line { height: 1px; background: linear-gradient(90deg,transparent,var(--border),transparent); margin-bottom: 80px; }
+
+/* ─── FREE OFFER ─── */
+.free-section { padding-bottom: 80px; }
+
+.free-card {
+  background: linear-gradient(135deg, rgba(255,183,3,0.07) 0%, rgba(251,133,0,0.04) 100%);
+  border: 1px solid rgba(255,183,3,0.18);
+  border-radius: 28px; padding: 56px;
+  position: relative; overflow: hidden;
+}
+.free-card::before {
+  content: 'FREE';
+  position: absolute; right: -10px; top: -30px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9rem; font-weight: 900;
+  color: rgba(255,183,3,0.04); letter-spacing: -0.06em;
+  pointer-events: none; user-select: none; line-height: 1;
+}
+
+.eyebrow {
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--amber); margin-bottom: 14px;
+}
+.section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2rem; font-weight: 700;
+  letter-spacing: -0.025em; margin-bottom: 10px;
+}
+.section-sub { color: var(--muted); font-size: 1rem; max-width: 520px; margin-bottom: 40px; }
+
+.free-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+
+.free-item {
+  background: rgba(255,255,255,0.022); border: 1px solid var(--border);
+  border-radius: 18px; padding: 28px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.free-item:hover { border-color: rgba(255,183,3,0.25); transform: translateY(-5px); }
+.fi-icon { font-size: 2rem; margin-bottom: 14px; display: block; }
+.fi-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 7px; }
+.fi-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+/* ─── PORTFOLIO ─── */
+.port-section { padding-bottom: 80px; }
+
+.port-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; margin-top: 36px; }
+
+.port-card {
+  display: block; text-decoration: none; color: inherit;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 22px; padding: 30px;
+  position: relative; overflow: hidden;
+  transition: border-color 0.35s, box-shadow 0.35s;
+  transform-style: preserve-3d; transform: perspective(900px);
+}
+.port-card::before {
+  content: ''; position: absolute; inset: 0; border-radius: 22px;
+  background: linear-gradient(135deg, rgba(255,183,3,0.06), transparent 60%);
+  opacity: 0; transition: opacity 0.3s;
+}
+.port-card:hover { border-color: rgba(255,183,3,0.28); box-shadow: 0 22px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,183,3,0.1); }
+.port-card:hover::before { opacity: 1; }
+
+.pc-stack {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem; color: var(--violet); font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px;
+}
+.pc-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 9px; }
+.pc-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.65; margin-bottom: 22px; }
+.pc-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.8rem; color: var(--amber); font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  text-decoration: none;
+}
+.pc-link:hover { text-decoration: underline; }
+.pc-link::after { content: '↗'; font-size: 0.75rem; }
+
+/* ─── SOLUTION ─── */
+.sol-section { padding-bottom: 80px; }
+.sol-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 36px; }
+
+.sol-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 24px; padding: 34px;
+  position: relative; overflow: hidden;
+  transition: transform 0.4s, box-shadow 0.4s;
+  transform-style: preserve-3d; transform: perspective(800px);
+}
+.sol-card.star {
+  border-color: rgba(255,183,3,0.2);
+  background: linear-gradient(145deg, rgba(255,183,3,0.07), var(--card));
+}
+.sol-card:hover { box-shadow: 0 28px 80px rgba(0,0,0,0.55); }
+.sol-card.star:hover { box-shadow: 0 28px 80px rgba(255,183,3,0.18); }
+
+.si-icon { font-size: 2.4rem; margin-bottom: 18px; display: block; }
+.si-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--amber); margin-bottom: 10px; }
+.si-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 18px; }
+.si-list { list-style: none; }
+.si-list li {
+  font-size: 0.87rem; color: var(--muted);
+  padding: 8px 0; border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 10px; line-height: 1.5;
+}
+.si-list li:last-child { border-bottom: none; }
+.si-list li::before { content: '→'; color: var(--amber); flex-shrink: 0; font-size: 0.8rem; margin-top: 1px; }
+
+/* ─── DISCOVERY ─── */
+.disc-section { padding-bottom: 80px; }
+
+.disc-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 28px; padding: 60px 48px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.disc-card::before {
+  content: '?';
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  font-family: 'Space Grotesk', sans-serif; font-size: 22rem; font-weight: 900;
+  color: rgba(123,97,255,0.04); line-height: 1;
+  pointer-events: none; user-select: none;
+}
+
+.disc-eyebrow { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--violet); margin-bottom: 18px; }
+.disc-q {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.7rem; font-weight: 700; letter-spacing: -0.025em;
+  line-height: 1.25; max-width: 580px; margin: 0 auto 36px;
+}
+.disc-options { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 36px; }
+
+.d-opt {
+  padding: 15px 34px; border-radius: 14px; font-size: 0.95rem;
+  font-weight: 600; cursor: pointer; transition: all 0.28s;
+  font-family: 'Space Grotesk', sans-serif; border: none; outline: none;
+  letter-spacing: -0.01em;
+}
+.d-opt.a {
+  background: rgba(255,183,3,0.1); border: 1.5px solid rgba(255,183,3,0.25);
+  color: var(--amber);
+}
+.d-opt.b {
+  background: rgba(123,97,255,0.1); border: 1.5px solid rgba(123,97,255,0.25);
+  color: #9E8FFF;
+}
+.d-opt.a:hover { background: rgba(255,183,3,0.22); transform: translateY(-3px); box-shadow: 0 8px 28px rgba(255,183,3,0.25); }
+.d-opt.b:hover { background: rgba(123,97,255,0.22); transform: translateY(-3px); box-shadow: 0 8px 28px rgba(123,97,255,0.25); }
+.d-opt.chosen { transform: translateY(-3px) scale(1.04); }
+
+.disc-note { font-size: 0.95rem; color: var(--muted); }
+.disc-note strong { color: var(--amber); }
+
+/* ─── FOOTER / SIGN OFF ─── */
+footer {
+  position: relative; z-index: 1;
+  max-width: 1240px; margin: 0 auto;
+  padding: 40px 48px 60px;
+  border-top: 1px solid var(--border);
+}
+.footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 30px; }
+
+.f-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; margin-bottom: 4px; }
+.f-name em { color: var(--amber); font-style: normal; }
+.f-title { font-size: 0.88rem; color: var(--muted); }
+.f-tech {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;
+}
+.f-tag {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+  color: var(--violet); background: rgba(123,97,255,0.1);
+  border: 1px solid rgba(123,97,255,0.18);
+  padding: 4px 10px; border-radius: 6px; font-weight: 500;
+}
+
+.f-cta a {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 18px 36px;
+  background: linear-gradient(135deg, var(--amber), var(--orange));
+  color: #06061A; border-radius: 16px;
+  font-size: 1rem; font-weight: 700; text-decoration: none;
+  font-family: 'Space Grotesk', sans-serif;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.f-cta a:hover { transform: translateY(-3px); box-shadow: 0 14px 44px rgba(255,183,3,0.45); }
+.f-note { font-size: 0.78rem; color: var(--muted); margin-top: 10px; text-align: center; }
+
+/* ─── REVEAL ─── */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s cubic-bezier(.16,1,.3,1), transform 0.7s cubic-bezier(.16,1,.3,1); }
+.reveal.on { opacity: 1; transform: translateY(0); }
+.delay-1 { transition-delay: 80ms; }
+.delay-2 { transition-delay: 160ms; }
+.delay-3 { transition-delay: 240ms; }
+.delay-4 { transition-delay: 320ms; }
+
+/* ─── RESPONSIVE ─── */
+@media(max-width: 960px) {
+  .hero { flex-direction: column; padding: 100px 24px 60px; gap: 40px; }
+  .hero-visual { display: none; }
+  .free-grid, .sol-grid { grid-template-columns: 1fr; }
+  .port-grid { grid-template-columns: 1fr; }
+  nav { padding: 14px 24px; }
+  .nav-badge { display: none; }
+  .wrap { padding: 0 24px; }
+  footer { padding: 40px 24px 50px; }
+  .footer-inner { flex-direction: column; text-align: center; }
+  .f-tech { justify-content: center; }
+  .free-card { padding: 36px 24px; }
+  .disc-card { padding: 40px 24px; }
+  .disc-q { font-size: 1.3rem; }
+}
+@media(prefers-reduced-motion: reduce) {
+  .cube, .orbit-ring, .cube-aura, .pill-dot { animation: none; }
+  .reveal { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Hassan <em>Karim</em></div>
+  <div class="nav-badge">MERN · Next.js · TypeScript</div>
+  <a href="#reply" class="nav-cta">📬 Reply Today</a>
+</nav>
+
+<!-- HERO -->
+<section>
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-pill">
+        <span class="pill-dot"></span>
+        Free Architecture Plan — Delivered in 24 hrs
+      </div>
+      <h1 class="hero-title">
+        Building Your<br>
+        <span class="g">Amazon Clone</span><br>
+        The Right Way.
+      </h1>
+      <p class="hero-desc">
+        A $7,000 investment deserves a plan you can see before you commit. I'll deliver a free Next.js routing structure, MongoDB schema, and full API design — so you know exactly how your platform is built, not just promised.
+      </p>
+      <div class="hero-actions">
+        <a href="#free-offer" class="btn-primary">🎁 Claim Free Plan</a>
+        <a href="#portfolio" class="btn-outline">View Similar Work ↓</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="cube-aura"></div>
+      <div class="orbit-ring"><div class="orbit-dot"></div></div>
+      <div class="scene">
+        <div class="cube">
+          <div class="face front">🛒</div>
+          <div class="face back">📦</div>
+          <div class="face right">⚡</div>
+          <div class="face left">🔒</div>
+          <div class="face top">🚀</div>
+          <div class="face bottom">✅</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FREE OFFER -->
+<section class="free-section" id="free-offer">
+  <div class="wrap">
+    <div class="free-card reveal">
+      <div class="eyebrow">⚡ Free Before You Commit</div>
+      <h2 class="section-title">Your Architecture Plan — On Me</h2>
+      <p class="section-sub">Before spending a single dollar, you'll have a complete technical blueprint. Reply today and it's in your inbox within 24 hours.</p>
+      <div class="free-grid">
+        <div class="free-item reveal delay-1">
+          <span class="fi-icon">🗺️</span>
+          <div class="fi-title">Next.js Routing Structure</div>
+          <div class="fi-desc">Complete route architecture for product pages, category listings, cart, and checkout flows — mapped and ready to build.</div>
+        </div>
+        <div class="free-item reveal delay-2">
+          <span class="fi-icon">🗄️</span>
+          <div class="fi-title">MongoDB Schema Design</div>
+          <div class="fi-desc">Data models for products, users, orders, inventory, and seller management — designed for scale from day one.</div>
+        </div>
+        <div class="free-item reveal delay-3">
+          <span class="fi-icon">🔌</span>
+          <div class="fi-title">API Design Blueprint</div>
+          <div class="fi-desc">REST endpoints for every feature — dynamic search, cart logic, Stripe payments, and the admin dashboard.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="div-line"></div></div>
+
+<!-- PORTFOLIO -->
+<section class="port-section" id="portfolio">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow">👀 Similar Work</div>
+      <h2 class="section-title">Platforms You Can Review Right Now</h2>
+      <p class="section-sub">Real e-commerce and marketplace projects built on the exact same stack.</p>
+    </div>
+    <div class="port-grid">
+      <a href="https://www.bigcartel.com/" target="_blank" rel="noopener" class="port-card reveal delay-1">
+        <div class="pc-stack">Next.js · E-Commerce · SaaS</div>
+        <div class="pc-name">Big Cartel</div>
+        <div class="pc-desc">Full-scale e-commerce platform built on Next.js — product listings, storefront management, and cart/checkout at scale. This is what your clone stack looks like in production.</div>
+        <span class="pc-link">bigcartel.com</span>
+      </a>
+      <a href="https://www.allbirds.com/" target="_blank" rel="noopener" class="port-card reveal delay-2">
+        <div class="pc-stack">Next.js · Shopify · Storefront API</div>
+        <div class="pc-name">Allbirds</div>
+        <div class="pc-desc">Next.js storefront with dynamic product pages, real-time cart, and a polished checkout experience — the same UX standard your Amazon clone is being built to.</div>
+        <span class="pc-link">allbirds.com</span>
+      </a>
+      <a href="https://packlane.com/" target="_blank" rel="noopener" class="port-card reveal delay-3">
+        <div class="pc-stack">React · Node.js · MongoDB · Redis</div>
+        <div class="pc-name">Packlane</div>
+        <div class="pc-desc">Complex e-commerce system on React, Node.js, MongoDB, and Redis — exactly the backend architecture that will power your inventory, orders, and product management.</div>
+        <span class="pc-link">packlane.com</span>
+      </a>
+      <a href="https://thetradecore.com/" target="_blank" rel="noopener" class="port-card reveal delay-4">
+        <div class="pc-stack">React JS · Node JS · TypeScript · Tailwind</div>
+        <div class="pc-name">The Trade Core</div>
+        <div class="pc-desc">A marketplace platform I built — multi-user flows, listing management, and transaction architecture. The closest reference to your Amazon clone in my portfolio.</div>
+        <span class="pc-link">thetradecore.com</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="div-line"></div></div>
+
+<!-- SOLUTION PACKAGE -->
+<section class="sol-section" id="solution">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow">📦 Complete Solution</div>
+      <h2 class="section-title">Not Just a Build — A Growth Platform</h2>
+      <p class="section-sub">Every deliverable included. Nothing left to chance.</p>
+    </div>
+    <div class="sol-grid">
+      <div class="sol-card star reveal delay-1">
+        <span class="si-icon">🏗️</span>
+        <div class="si-label">Core Build</div>
+        <div class="si-name">Complete Storefront</div>
+        <ul class="si-list">
+          <li>Next.js storefront with product listings</li>
+          <li>Dynamic search &amp; filtering</li>
+          <li>Cart &amp; checkout with Stripe payments</li>
+          <li>Seller &amp; admin dashboard</li>
+          <li>User auth &amp; account management</li>
+        </ul>
+      </div>
+      <div class="sol-card reveal delay-2">
+        <span class="si-icon">📊</span>
+        <div class="si-label">Strategic Add-on</div>
+        <div class="si-name">Inventory &amp; Orders</div>
+        <ul class="si-list">
+          <li>Real-time inventory tracking via MongoDB</li>
+          <li>Full order management system</li>
+          <li>Stock alerts &amp; auto-updates</li>
+          <li>Seller performance dashboard</li>
+        </ul>
+      </div>
+      <div class="sol-card reveal delay-3">
+        <span class="si-icon">🛡️</span>
+        <div class="si-label">After Launch</div>
+        <div class="si-name">30-Day Free Support</div>
+        <ul class="si-list">
+          <li>Bug fixes &amp; performance issues</li>
+          <li>Feature tweaks &amp; adjustments</li>
+          <li>Priority response within 12 hours</li>
+          <li>No extra cost — guaranteed</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="div-line"></div></div>
+
+<!-- DISCOVERY QUESTION -->
+<section class="disc-section" id="reply">
+  <div class="wrap">
+    <div class="disc-card reveal">
+      <div class="disc-eyebrow">One Quick Question Before We Start</div>
+      <h3 class="disc-q">Do you need multi-vendor support like the real Amazon — or a single-seller model?</h3>
+      <div class="disc-options">
+        <button class="d-opt a" onclick="choose(this)">🏪 Multi-Vendor (like Amazon)</button>
+        <button class="d-opt b" onclick="choose(this)">🛍️ Single-Seller Model</button>
+      </div>
+      <p class="disc-note">Reply with your answer today and I'll send the <strong>free architecture plan within 24 hours.</strong></p>
+    </div>
+  </div>
+</section>
+
+<div class="wrap" style="margin-bottom: 40px;"><div class="div-line" style="margin-bottom: 0;"></div></div>
+
+<!-- FOOTER / SIGN OFF -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="f-name">Hassan <em>Karim</em></div>
+      <div class="f-title">MERN Stack &amp; Next.js Developer · Full-Stack &amp; React Native</div>
+      <div class="f-tech">
+        <span class="f-tag">Next.js</span>
+        <span class="f-tag">React</span>
+        <span class="f-tag">Node.js</span>
+        <span class="f-tag">MongoDB</span>
+        <span class="f-tag">TypeScript</span>
+        <span class="f-tag">Tailwind</span>
+        <span class="f-tag">Stripe</span>
+        <span class="f-tag">Redux</span>
+      </div>
+    </div>
+    <div class="f-cta">
+      <a href="#">📬 Reply on Upwork →</a>
+      <div class="f-note">Free architecture plan delivered within 24 hours.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const items = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } });
+}, { threshold: 0.1 });
+items.forEach(el => io.observe(el));
+
+// Trigger hero reveals on load
+document.querySelectorAll('.hero .reveal').forEach(el => {
+  setTimeout(() => el.classList.add('on'), 100);
+});
+
+// 3D tilt on portfolio cards
+function addTilt(selector, intensity = 10) {
+  document.querySelectorAll(selector).forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width  - 0.5;
+      const y = (e.clientY - r.top)  / r.height - 0.5;
+      card.style.transform = `perspective(900px) translateY(-6px) rotateX(${-y * intensity}deg) rotateY(${x * intensity}deg)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = 'perspective(900px)'; });
+  });
+}
+addTilt('.port-card', 9);
+addTilt('.sol-card', 7);
+
+// Discovery option
+function choose(el) {
+  document.querySelectorAll('.d-opt').forEach(o => { o.classList.remove('chosen'); o.style.opacity = '0.4'; });
+  el.style.opacity = '1';
+  el.classList.add('chosen');
+}
+</script>
+</body>
+</html>
